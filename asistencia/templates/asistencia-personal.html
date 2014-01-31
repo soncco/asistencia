@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+  <h1>Asistencia de Personal</h1>
+</div>
+<div class="msg"></div>
+<div class="wrapper">
+  <form action="" id="the-form" role="form">
+    <div class="form-group">
+      <input type="text" class="form-control input-lg input-rlg" id="dni" name="dni" autofocus required placeholder="Ingresa tu DNI" maxlength="8">
+    </div>
+    {% csrf_token %}
+  </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  var theURL = '{% url 'asistencia_personal' %}'
+</script>
+<script src="/media/js/vendor/mustache.js"></script>
+<script src="/media/js/actions/personal.js"></script>
+{% endblock %}
+
+{% block templates %}
+<script type="text/x-mustache-template" id="tpl-personal">
+  <div class="client">
+    <div class="text-center">
+      <img src="/media/{% templatetag openvariable %} foto {% templatetag closevariable %}" alt="" class="img-circle img-thumbnail" width="250">
+      <h3 class="text-info">¡Hola <strong>{% templatetag openvariable %} nombres {% templatetag closevariable %}!</strong></h3>
+    </div>
+  </div>
+</script>
+<script type="text/x-mustache-template" id="tpl-404">
+  <div class="alert alert-danger">
+    No existe nadie con ese número de DNI.
+    <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+  </div>
+</script>
+<script type="text/x-mustache-template" id="tpl-403">
+  <div class="alert alert-warning">
+    Acabas de registrar tu asistencia hace menos de 10 minutos, no puedes hacerlo otra vez.
+    <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
+  </div>
+</script>
+{% endblock %}
