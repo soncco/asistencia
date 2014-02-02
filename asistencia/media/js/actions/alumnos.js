@@ -3,6 +3,7 @@
   $wrapper = $('.wrapper');
   $msg = $('.msg');
   $dni = $('#dni');
+  $curso $('#curso');
 
   $tplPersonal = $('#tpl-personal');
   $tpl404 = $('#tpl-404');
@@ -30,6 +31,7 @@
         }
       });
       $dni.val('');
+      $curso.val('');
   });
   
 })(jQuery)

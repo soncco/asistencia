@@ -17,5 +17,19 @@
       $(this).parent().addClass('active'); 
     } 
   });
+
+  limpiar = function() {
+    $wrapper.find('.client').remove();
+  };
+
+  handleAlerts = function(el, msg) {
+    $msg.find('.alert').remove(); 
+    $msg.append(msg);
+    $msg.find('.alert').alert();
+    $msg.find('.alert').addClass('animated fadeIn');
+    $('.alert').bind('closed.bs.alert', function () {
+      $dni.focus();
+    });
+  };
   
 })(jQuery)
