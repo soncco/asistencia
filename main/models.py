@@ -59,6 +59,7 @@ class RegistroPersonal(models.Model):
 
 class RegistroAlumno(models.Model):
   alumno = models.ForeignKey(Alumno)
+  curso = models.ForeignKey(Curso)
   marca = models.DateTimeField()
 
 class Opcion(models.Model):
