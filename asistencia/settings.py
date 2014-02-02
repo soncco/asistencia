@@ -1,4 +1,4 @@
-# Django settings for asistencia project.
+# -*- coding: utf-8 -*-
 import os
 
 DEBUG = True
@@ -161,6 +161,9 @@ LOGGING = {
     }
 }
 
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'django.contrib.auth.context_processors.auth',
@@ -170,3 +173,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 FIXTURE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'data'),
 )
+
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'Administración de Asistencia'
+}
