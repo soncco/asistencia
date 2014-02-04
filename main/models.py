@@ -56,11 +56,13 @@ class Alumno(models.Model):
 class RegistroPersonal(models.Model):
   personal = models.ForeignKey(Personal)
   marca = models.DateTimeField()
+  tolerancia = models.IntegerField()
 
 class RegistroAlumno(models.Model):
   alumno = models.ForeignKey(Alumno)
-  curso = models.ForeignKey(Curso)
   marca = models.DateTimeField()
+  curso = models.ForeignKey(Curso)
+  tolerancia = models.IntegerField()
 
 class Opcion(models.Model):
 

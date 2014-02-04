@@ -18,6 +18,13 @@
     } 
   });
 
+  $('.datepicker').datepicker({
+    changeMonth: true,
+    changeYear: true,
+    dateFormat: 'yy-mm-dd',
+    maxDate: new Date()
+  });
+
   limpiar = function() {
     $wrapper.find('.client').remove();
   };

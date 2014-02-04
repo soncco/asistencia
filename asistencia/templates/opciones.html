@@ -6,16 +6,16 @@
 <div class="wrapper">
   <form action="" id="the-form" role="form" method="post">
     <div class="form-group">
-      <label>Tiempo entre registros:</label>
+      <label for="tiempo_entre_marcas">Tiempo entre registros:</label>
       <input type="number" class="form-control" id="tiempo_entre_marcas" name="tiempo_entre_marcas" required placeholder="Tiempo entre registros" value="{{ tiempo_entre_marcas }}" min="1">
       <p class="help-block"><i class="icon icon-question-sign text-primary"></i> El tiempo en <strong>minutos</strong> que tiene que transcurrir entre cada registro.</p>
     </div>
     <div class="form-group">
-      <label>Tolerancia:</label>
+      <label for="tolerancia">Tolerancia:</label>
       <input type="number" class="form-control" id="tolerancia" name="tolerancia" required placeholder="Tolerancia" value="{{ tolerancia }}" min="1">
       <p class="help-block"><i class="icon icon-question-sign text-primary"></i> El tiempo en <strong>minutos</strong> que se tolera una tardanza.</p>
     </div>
-    <button class="btn btn-block btn-primary" type="submit">Guardar opciones</button>
+    <button class="btn btn-block btn-success" type="submit">Guardar opciones</button>
     {% csrf_token %}
   </form>
 </div>

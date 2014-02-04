@@ -7,4 +7,7 @@ urlpatterns = patterns('main.views',
   url(r'^asistencia/alumno/$', 'asistencia_alumno', name = 'asistencia_alumno'),
   url(r'^asistencia/personal/$', 'asistencia_personal', name = 'asistencia_personal'),
   url(r'^opciones/$', 'opciones', name = 'opciones'),
+
+  url(r'^reporte/curso$', 'reporte_curso', name = 'reporte_curso'),
+  url(r'^reporte/personal$', 'reporte_personal', name = 'reporte_personal'),
 )

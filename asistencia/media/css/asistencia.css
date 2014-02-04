@@ -14,6 +14,14 @@ h1,h2,h3,h4,h5,h6,p {
   font-family: 'Open Sans';
 }
 
+table {
+  margin-top: 20px;
+}
+
+caption small {
+  font-size: 60%;
+}
+
 .alert {
   margin-top:  10px;
 }

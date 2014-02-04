@@ -15,7 +15,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 
 from models import Alumno, Personal, Horario, Curso, RegistroPersonal, RegistroAlumno
-from utils import get_opcion, set_opcion
+from utils import get_opcion, set_opcion, get_alumnos_curso, get_registros_alumno, get_registros_personal, get_horarios_personal
 import json, datetime
 
 def the_login(request):
@@ -75,7 +75,7 @@ def asistencia_alumno(request):
       seconds = int(get_opcion('tiempo_entre_marcas')) * 60
 
     if seconds >= int(get_opcion('tiempo_entre_marcas')) * 60:
-      registro = RegistroAlumno(alumno = alumno, curso = elcurso, marca = ahora)
+      registro = RegistroAlumno(alumno = alumno, curso = elcurso, marca = ahora, tolerancia = int(get_opcion('tolerancia')))
       registro.save()
 
       context = {
@@ -106,7 +106,7 @@ def asistencia_personal(request):
       seconds = int(get_opcion('tiempo_entre_marcas')) * 60
 
     if seconds >= int(get_opcion('tiempo_entre_marcas')) * 60:
-      registro = RegistroPersonal(personal = personal, marca = ahora)
+      registro = RegistroPersonal(personal = personal, marca = ahora, tolerancia = int(get_opcion('tolerancia')))
       registro.save()
 
       context = {
@@ -139,3 +139,50 @@ def opciones(request):
     'tiempo_entre_marcas': get_opcion('tiempo_entre_marcas')
   }
   return render_to_response('opciones.html', context, context_instance = RequestContext(request))
+
+@login_required
+def reporte_curso(request):
+  if request.method == 'POST':
+    curso = request.POST.get('curso')
+    fecha = request.POST.get('fecha')
+
+    alumnos = get_alumnos_curso(curso)
+    results = []
+
+    for alumno in alumnos:
+      registros = get_registros_alumno(alumno, curso, fecha)
+      results.append({
+        'DNI': alumno.DNI,
+        'nombres': alumno.nombres,
+        'apellidos': alumno.apellidos,
+        'registros': registros
+      })
+
+    return HttpResponse('{"alumnos": ' + json.dumps(results) + '}', mimetype = "application/json")
+
+  cursos = Curso.objects.filter(activo = True)
+  context = {'cursos': cursos}
+  return render_to_response('reporte-curso.html', context, context_instance = RequestContext(request))
+
+@login_required
+def reporte_personal(request):
+  if request.method == 'POST':
+    fecha = request.POST.get('fecha')
+
+    personal = Personal.objects.filter(activo = True)
+    results = []
+
+    for persona in personal:
+      registros = get_registros_personal(persona, fecha)
+      horarios = get_horarios_personal(persona)
+      results.append({
+        'DNI': persona.DNI,
+        'nombres': persona.nombres,
+        'apellidos': persona.apellidos,
+        'horarios': horarios,
+        'registros': registros
+      })
+
+    return HttpResponse('{"personal": ' + json.dumps(results) + '}', mimetype = "application/json")
+
+  return render_to_response('reporte-personal.html', context_instance = RequestContext(request))
