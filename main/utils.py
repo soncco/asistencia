@@ -1,4 +1,4 @@
-from models import Alumno, RegistroAlumno, RegistroPersonal, Opcion
+from models import Alumno, Curso, RegistroAlumno, RegistroPersonal, Opcion
 import datetime
 
 def get_opcion(clave):
@@ -9,11 +9,16 @@ def set_opcion(clave, valor):
   opcion.valor = valor
   opcion.save()
 
+def daterange(start_date, end_date):
+  for n in range(int ((end_date - start_date).days + 1)):
+    yield start_date + datetime.timedelta(n)
+
 def get_alumnos_curso(curso):
   return Alumno.objects.filter(curso__pk = curso).order_by('apellidos')
 
 def get_registros_alumno(alumno, curso, fecha):
-  fecha = datetime.datetime.strptime(fecha, '%Y-%m-%d')
+  if isinstance(fecha, basestring):
+    fecha = datetime.datetime.strptime(fecha, '%Y-%m-%d')
 
   results = []
 
@@ -32,6 +37,37 @@ def get_registros_alumno(alumno, curso, fecha):
     })
 
   return results
+
+
+def total_dias_curso(curso):
+  total = 0
+  for fecha in daterange(curso.fecha_inicio, curso.fecha_fin):
+    if fecha.isoweekday() in range(1,6):
+      total += 1
+  return total
+
+def get_fechas_curso(curso, formato):
+  curso = Curso.objects.get(pk = curso)
+  fechas = []
+  for fecha in daterange(curso.fecha_inicio, curso.fecha_fin):
+    if formato == 'obj':
+      fechas.append({'fecha': fecha})
+    else:
+      fechas.append({'fecha': fecha.strftime("%d/%m")})
+  return fechas
+
+def get_porcentaje_alumno(alumno, curso):
+  curso = Curso.objects.get(pk = curso)
+  asistencias = 0
+  total = total_dias_curso(curso)
+  for fecha in daterange(curso.fecha_inicio, curso.fecha_fin):
+    if fecha.isoweekday() in range(1,6):
+      registros = get_registros_alumno(alumno, curso, fecha)
+      if len(registros) > 0:
+        asistencias += 1
+
+  return (float(asistencias)/total) * 100
+
 
 def get_registros_personal(personal, fecha):
   fecha = datetime.datetime.strptime(fecha, '%Y-%m-%d')
@@ -65,3 +101,13 @@ def get_horarios_personal(personal):
     })
 
   return results
+
+def get_asistencias_alumno(alumno, curso):
+  asistencias = []
+  fechas = get_fechas_curso(curso, 'obj')
+
+  for fecha in fechas:
+    registros = get_registros_alumno(alumno, curso, fecha['fecha'])
+    asistencias.append({ 'registros': registros})
+
+  return asistencias

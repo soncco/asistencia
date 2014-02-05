@@ -6,5 +6,8 @@ South==0.8.4
 argparse==1.2.1
 django-suit==0.2.5
 django-suit-locale==1.0.2
+html5lib==1.0b3
 pytz==2013.9
+reportlab==2.7
+six==1.5.2
 wsgiref==0.1.2

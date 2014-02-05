@@ -13,10 +13,11 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
+from django_xhtml2pdf.utils import generate_pdf
 
 from models import Alumno, Personal, Horario, Curso, RegistroPersonal, RegistroAlumno
-from utils import get_opcion, set_opcion, get_alumnos_curso, get_registros_alumno, get_registros_personal, get_horarios_personal
 import json, datetime
+from utils import *
 
 def the_login(request):
   if(request.user.is_authenticated()):
@@ -186,3 +187,148 @@ def reporte_personal(request):
     return HttpResponse('{"personal": ' + json.dumps(results) + '}', mimetype = "application/json")
 
   return render_to_response('reporte-personal.html', context_instance = RequestContext(request))
+
+@login_required
+def reporte_porcentaje(request):
+  if request.method == 'POST':
+    curso = request.POST.get('curso')
+
+    alumnos = get_alumnos_curso(curso)
+
+    results = []
+
+    for alumno in alumnos:
+      porcentaje = get_porcentaje_alumno(alumno, curso)
+      results.append({
+        'DNI': alumno.DNI,
+        'nombres': alumno.nombres,
+        'apellidos': alumno.apellidos,
+        'porcentaje': '%.2f' % porcentaje
+      })
+
+    response = '{"alumnos": ' + json.dumps(results) + '}'
+    return HttpResponse(response, mimetype = "application/json")
+
+  cursos = Curso.objects.filter(activo = True)
+  context = {'cursos': cursos}
+  return render_to_response('reporte-porcentaje.html', context, context_instance = RequestContext(request))
+
+@login_required
+def reporte_curso_total(request):
+  if request.method == 'POST':
+    curso = request.POST.get('curso')
+    alumnos = get_alumnos_curso(curso)
+
+    results = []
+
+    for alumno in alumnos:
+      asistencias = get_asistencias_alumno(alumno, curso)
+      results.append({
+        'DNI': alumno.DNI,
+        'nombres': alumno.nombres,
+        'apellidos': alumno.apellidos,
+        'asistencias': asistencias
+      })
+
+    fechas = get_fechas_curso(curso, 'str')
+
+    response = '{"alumnos": ' + json.dumps(results) + ', "fechas": ' + json.dumps(fechas) + '}'
+    return HttpResponse(response, mimetype = "application/json")
+
+  cursos = Curso.objects.filter(activo = True)
+  context = {'cursos': cursos}
+  return render_to_response('reporte-curso-total.html', context, context_instance = RequestContext(request))
+
+@login_required
+def reporte_curso_print(request):
+  
+  curso = request.GET.get('curso')
+  fecha = request.GET.get('fecha')
+
+  alumnos = get_alumnos_curso(curso)
+  results = []
+
+  for alumno in alumnos:
+    registros = get_registros_alumno(alumno, curso, fecha)
+    results.append({
+      'DNI': alumno.DNI,
+      'nombres': alumno.nombres,
+      'apellidos': alumno.apellidos,
+      'registros': registros
+    })
+
+  curso = Curso.objects.get(pk = curso)
+
+  resp = HttpResponse(content_type = 'application/pdf')
+  context = {'results': results, 'curso': curso, 'fecha': datetime.datetime.strptime(fecha, '%Y-%m-%d')}
+  return generate_pdf('reporte-curso-print.html', file_object = resp, context = context)
+
+@login_required
+def reporte_personal_print(request):
+  fecha = request.GET.get('fecha')
+
+  personal = Personal.objects.filter(activo = True)
+  results = []
+
+  for persona in personal:
+    registros = get_registros_personal(persona, fecha)
+    horarios = get_horarios_personal(persona)
+    results.append({
+      'DNI': persona.DNI,
+      'nombres': persona.nombres,
+      'apellidos': persona.apellidos,
+      'horarios': horarios,
+      'registros': registros
+    })
+
+  resp = HttpResponse(content_type = 'application/pdf')
+  context = {'results': results, 'fecha': datetime.datetime.strptime(fecha, '%Y-%m-%d')}
+  return generate_pdf('reporte-personal-print.html', file_object = resp, context = context)
+
+@login_required
+def reporte_porcentaje_print(request):
+  curso = request.GET.get('curso')
+
+  alumnos = get_alumnos_curso(curso)
+
+  results = []
+
+  for alumno in alumnos:
+    porcentaje = get_porcentaje_alumno(alumno, curso)
+    results.append({
+      'DNI': alumno.DNI,
+      'nombres': alumno.nombres,
+      'apellidos': alumno.apellidos,
+      'porcentaje': '%.2f' % porcentaje
+    })
+
+  curso = Curso.objects.get(pk = curso)
+
+  resp = HttpResponse(content_type = 'application/pdf')
+  context = {'results': results, 'curso': curso}
+  return generate_pdf('reporte-porcentaje-print.html', file_object = resp, context = context)
+
+@login_required
+def reporte_curso_total_print(request):
+  
+  curso = request.GET.get('curso')
+  alumnos = get_alumnos_curso(curso)
+
+  results = []
+
+  for alumno in alumnos:
+    asistencias = get_asistencias_alumno(alumno, curso)
+    results.append({
+      'DNI': alumno.DNI,
+      'nombres': alumno.nombres,
+      'apellidos': alumno.apellidos,
+      'asistencias': asistencias
+    })
+
+  fechas = get_fechas_curso(curso, 'str')
+
+  curso = Curso.objects.get(pk = curso)
+
+  resp = HttpResponse(content_type = 'application/pdf')
+  context = {'results': results, 'curso': curso, 'fechas': fechas}
+  return generate_pdf('reporte-curso-total-print.html', file_object = resp, context = context)

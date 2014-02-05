@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="page-header">
-  <h1>Reporte por cursos</h1>
+  <h1>Reporte porcentual de cursos</h1>
 </div>
 <div class="wrapper">
   <form action="" id="the-form" role="form" method="post" class="form-inline">
@@ -13,9 +13,6 @@
         {% endfor%}
       </select>
     </div>
-    <div class="form-group">
-      <input type="text" class="form-control datepicker" id="fecha" name="fecha" required placeholder="Escoge la fecha">
-    </div>
     <button class="btn btn-primary" type="submit">Listo</button>
     {% csrf_token %}
   </form>
@@ -24,11 +21,11 @@
 
 {% block js %}
 <script>
-  var theURL = '{% url 'reporte_curso' %}';
+  var theURL = '{% url 'reporte_porcentaje' %}';
 </script>
 <script src="/media/js/vendor/mustache.js"></script>
 <script src="/media/js/vendor/moment.js"></script>
-<script src="/media/js/actions/reporte-curso.js"></script>
+<script src="/media/js/actions/reporte-porcentaje.js"></script>
 {% endblock %}
 
 {% block templates %}
@@ -39,26 +36,21 @@
         <tr>
           <th>DNI</th>
           <th>Apellidos y Nombres</th>
-          <th>Asistencias</th>
+          <th>Porcentaje de asistencia</th>
         </tr>
       </thead>
       <tbody>
         {% templatetag openvariable %}#alumnos{% templatetag closevariable %}
         <tr>
-          <td>{% templatetag openvariable %} DNI {% templatetag closevariable %}</td>
+          <td>
+            {% templatetag openvariable %} DNI {% templatetag closevariable %},
+          </td>
           <td>
             {% templatetag openvariable %} apellidos {% templatetag closevariable %},
             {% templatetag openvariable %} nombres {% templatetag closevariable %}
           </td>
-          <td class="success">
-            <ul class="list-unstyled">
-              {% templatetag openvariable %}#registros{% templatetag closevariable %}
-              <li>{% templatetag openvariable %} hora {% templatetag closevariable %}:{% templatetag openvariable %} minuto {% templatetag closevariable %}</li>
-              {% templatetag openvariable %}/registros{% templatetag closevariable %}
-              {% templatetag openvariable %}^registros{% templatetag closevariable %}
-              <li class="text-danger">Falta</li>
-              {% templatetag openvariable %}/registros{% templatetag closevariable %}
-            </ul>
+          <td class="success text-right">
+            {% templatetag openvariable %} porcentaje {% templatetag closevariable %} %
           </td>
         </tr>
         {% templatetag openvariable %}/alumnos{% templatetag closevariable %}
@@ -75,7 +67,6 @@
 <script type="text/x-mustache-template" id="tpl-caption">
   <caption>
     {% templatetag openvariable %} nombre {% templatetag closevariable %}<br><small>{% templatetag openvariable %} fecha_inicio {% templatetag closevariable %} - {% templatetag openvariable %} fecha_fin {% templatetag closevariable %} &mdash; {% templatetag openvariable %} hora_inicio {% templatetag closevariable %} - {% templatetag openvariable %} hora_fin {% templatetag closevariable %}</small><br>
-    <small class="text-info">Reporte del día {% templatetag openvariable %} fecha {% templatetag closevariable %}</small>
   </caption>
 </script>
 {% endblock %}

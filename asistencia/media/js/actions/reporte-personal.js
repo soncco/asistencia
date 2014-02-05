@@ -21,6 +21,12 @@
           'fecha': moment($fecha.val(), 'YYYY-MM-DD').format('DD, MMM YYYY')
         });
 
+        $wrapper.find('.print').click(function() {
+          frameSrc = '/reporte/personal/print/?' + $form.serialize();
+          $('iframe').attr("src", frameSrc);
+          $('#printModal').modal({show: true});
+        });
+
         $table.append(caption);
       })
 

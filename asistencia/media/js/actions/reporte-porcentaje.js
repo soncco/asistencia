@@ -1,7 +1,6 @@
 (function($) {
   $form = $('#the-form');
   $curso = $('#curso');
-  $fecha = $('#fecha');
   $wrapper = $('.wrapper');
 
   $tplTabla = $('#tpl-tabla');
@@ -25,11 +24,10 @@
           'hora_fin': $option.data('horafin'),
           'fecha_inicio': $option.data('fechainicio'),
           'fecha_fin': $option.data('fechafin'),
-          'fecha': moment($fecha.val(), 'YYYY-MM-DD').format('DD, MMM YYYY')
         });
 
         $wrapper.find('.print').click(function() {
-          frameSrc = '/reporte/curso/print/?' + $form.serialize();
+          frameSrc = '/reporte/curso/porcentaje/print/?' + $form.serialize();
           $('iframe').attr("src", frameSrc);
           $('#printModal').modal({show: true});
         });

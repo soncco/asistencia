@@ -1,7 +1,6 @@
 (function($) {
   $form = $('#the-form');
   $curso = $('#curso');
-  $fecha = $('#fecha');
   $wrapper = $('.wrapper');
 
   $tplTabla = $('#tpl-tabla');
@@ -15,7 +14,7 @@
         var tabla = Mustache.render($tplTabla.html(), data);
         $wrapper.append(tabla);
         $wrapper.find('.report').addClass('animated flipInY');
-        $table = $wrapper.find('.table')
+        $table = $wrapper.find('.table');
         $table.find('td:contains("Falta")').addClass('danger')
 
         $option = $curso.find(':selected');
@@ -25,11 +24,10 @@
           'hora_fin': $option.data('horafin'),
           'fecha_inicio': $option.data('fechainicio'),
           'fecha_fin': $option.data('fechafin'),
-          'fecha': moment($fecha.val(), 'YYYY-MM-DD').format('DD, MMM YYYY')
         });
 
         $wrapper.find('.print').click(function() {
-          frameSrc = '/reporte/curso/print/?' + $form.serialize();
+          frameSrc = '/reporte/curso/total/print/?' + $form.serialize();
           $('iframe').attr("src", frameSrc);
           $('#printModal').modal({show: true});
         });

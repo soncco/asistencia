@@ -86,6 +86,7 @@ caption {
   font-weight: bold;
 }
 
-#chart {
-  height: 1700px;
+
+.overflow {
+  overflow-x: auto;
 }
