@@ -14,6 +14,7 @@ class AlumnoAdmin(admin.ModelAdmin):
   list_display = ('nombres', 'apellidos', 'email', 'DNI', 'activo',)
   list_filter = ('nombres', 'apellidos', 'activo',)
   search_fields = ['nombres', 'apellidos', 'DNI']
+  filter_vertical = ('curso',)
 
 class PersonalAdmin(admin.ModelAdmin):
   list_display = ('nombres', 'apellidos', 'email', 'DNI', 'activo')
@@ -35,6 +36,7 @@ class MyUserAdmin(UserAdmin):
   fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (_('Staff'), {'fields': ('is_staff',)}),
         (_('Groups'), {'fields': ('groups',)}),
     )
 
