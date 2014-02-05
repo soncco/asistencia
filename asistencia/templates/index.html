@@ -3,4 +3,19 @@
 <div class="page-header">
   <h1>Bienvenido</h1>
 </div>
+<p>Tienes las siguientes opciones:</p>
+<ul>
+  <li><a href="{% url 'asistencia_alumno' %}">Asistencia de alumnos</a></li>
+  <li><a href="{% url 'asistencia_personal' %}">Asistencia de personal</a></li>
+  <li class=""> Reportes
+    <ul>
+      <li><a href="{% url 'reporte_curso' %}">Reporte por cursos</a></li>
+      <li><a href="{% url 'reporte_porcentaje' %}">Porcentaje de asistencia de cursos</a></li>
+      <li><a href="{% url 'reporte_curso_total' %}">Reporte de asistencia total de curso</a></li>
+      <li><a href="{% url 'reporte_personal' %}">Reporte de personal</a></li>
+    </ul>
+  </li>
+  <li><a href="{% url 'opciones' %}">Opciones</a></li>
+  <li><a href="/admin/" target="_blank">Administración</a> (Se abrirá en otra ventana)</li>
+</ul>
 {% endblock %}

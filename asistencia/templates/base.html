@@ -26,9 +26,11 @@
           <ul class="nav navbar-nav">
             {% include 'menu.html' %}
           </ul>
+          {% if user.is_authenticated %}
           <ul class="nav navbar-nav navbar-right">
             <li><a href="{% url 'the_logout' %}">Salir</a></li>
           </ul>
+          {% endif %}
         </div>
       </nav>
       <div class="container">
