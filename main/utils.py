@@ -32,7 +32,7 @@ def get_registros_alumno(alumno, curso, fecha):
 
   for registro in registros:
     results.append({
-      'hora': '%02d' % (registro.marca.hour-5),
+      'hora': '%02d' % (registro.marca.hour),
       'minuto': '%02d' % registro.marca.minute
     })
 
