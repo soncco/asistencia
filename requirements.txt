@@ -4,11 +4,14 @@ PIL==1.1.7
 Pygments==1.6
 South==0.8.4
 argparse==1.2.1
+bpython==0.12
 django-suit==0.2.5
 django-suit-locale==1.0.2
 html5lib==1.0b3
 pylibmc==1.2.3
+python-memcached==1.53
 pytz==2013.9
+redis==2.9.1
 reportlab==2.7
 six==1.5.2
 wsgiref==0.1.2
