@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     #'south',
     'main',
+    'raven.contrib.django.raven_compat',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -185,4 +186,8 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
     }
+}
+
+RAVEN_CONFIG = {
+    'dsn': 'https://58d85c3ddab943c598de76b1f2601556:82b17aca464943ee9b1d9e2c0f3f61e9@app.getsentry.com/19044',
 }
