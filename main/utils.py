@@ -42,8 +42,7 @@ def get_registros_alumno(alumno, curso, fecha):
 def total_dias_curso(curso):
   total = 0
   for fecha in daterange(curso.fecha_inicio, curso.fecha_fin):
-    if fecha.isoweekday() in range(1,6):
-      total += 1
+    total += 1
   return total
 
 def get_fechas_curso(curso, formato):
@@ -62,10 +61,9 @@ def get_porcentaje_alumno(alumno, curso):
   total = total_dias_curso(curso)
   if total > 0:
     for fecha in daterange(curso.fecha_inicio, curso.fecha_fin):
-      if fecha.isoweekday() in range(1,6):
-        registros = get_registros_alumno(alumno, curso, fecha)
-        if len(registros) > 0:
-          asistencias += 1
+      registros = get_registros_alumno(alumno, curso, fecha)
+      if len(registros) > 0:
+        asistencias += 1
 
     return (float(asistencias)/total) * 100
   else:
