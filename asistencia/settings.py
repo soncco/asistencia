@@ -177,10 +177,3 @@ FIXTURE_DIRS = (
 SUIT_CONFIG = {
     'ADMIN_NAME': 'Administración de Asistencia'
 }
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-        'LOCATION': '127.0.0.1:11211',
-    }
-}
