@@ -10,6 +10,7 @@
 
   $form.submit(function(e) {
     e.preventDefault();
+    $('.btn-primary').button('loading');
     $.post(theURL, $form.serialize())
       .done(function(data) {
         var client = Mustache.render($tplPersonal.html(), data);
@@ -30,6 +31,8 @@
         }
       });
       $dni.val('');
+
+      $('.btn-primary').button('reset');
   });
   
 })(jQuery)

@@ -19,4 +19,10 @@ urlpatterns = patterns('main.views',
 
   url(r'^reporte/personal/$', 'reporte_personal', name = 'reporte_personal'),
   url(r'^reporte/personal/print/$', 'reporte_personal_print', name = 'reporte_personal_print'),
+
+  url(r'^reporte/categoria/$', 'reporte_categoria', name = 'reporte_categoria'),
+  url(r'^reporte/categoria/print/$', 'reporte_categoria_print', name = 'reporte_categoria_print'),
+
+  url(r'^categoria/cursos/(?P<categoria>.*)/$', 'categoria_cursos', name = 'categoria_cursos'),
+  url(r'^alumnos/categoria/(?P<curso>.*)/$', 'alumnos_curso_categoria', name = 'alumnos_curso_categoria'),
 )

@@ -3,16 +3,20 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.db.models import Q
 from django.utils.translation import gettext as _
-from models import Curso, Horario, Alumno, Personal, Opcion
+from models import Curso, Horario, Alumno, Personal, Opcion, Categoria
+
+class CategoriaAdmin(admin.ModelAdmin):
+  list_display = ('nombre', 'descripcion',)
+  search_fields = ['nombre']
 
 class CursoAdmin(admin.ModelAdmin):
-  list_display = ('nombre', 'hora_inicio', 'hora_fin', 'fecha_inicio', 'fecha_fin', 'activo',)
-  list_filter = ('activo',)
+  list_display = ('nombre', 'hora_inicio', 'hora_fin', 'fecha_inicio', 'fecha_fin', 'categoria', 'activo',)
+  list_filter = ('activo', 'categoria',)
   search_fields = ['nombre']
 
 class AlumnoAdmin(admin.ModelAdmin):
   list_display = ('nombres', 'apellidos', 'email', 'DNI', 'activo',)
-  list_filter = ('nombres', 'apellidos', 'activo',)
+  list_filter = ('nombres', 'apellidos', 'activo', 'curso__nombre',)
   search_fields = ['nombres', 'apellidos', 'DNI']
   filter_vertical = ('curso',)
 
@@ -45,6 +49,7 @@ class MyUserAdmin(UserAdmin):
     qs = qs.filter(~Q(username = 'brau'))
     return qs
 
+admin.site.register(Categoria, CategoriaAdmin)
 admin.site.register(Curso, CursoAdmin)
 admin.site.register(Horario, HorarioAdmin)
 admin.site.register(Alumno, AlumnoAdmin)

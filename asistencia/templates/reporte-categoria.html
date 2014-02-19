@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-header">
+  <h1>Reporte por categoría</h1>
+</div>
+<div class="wrapper">
+  <form action="" id="the-form" role="form" method="post" class="form-inline">
+    <div class="form-group">
+      <select name="categoria" id="categoria" class="form-control" required>
+        <option value="">Escoge el categoría</option>
+        {% for categoria in categorias %}
+        <option value="{{ categoria.pk }}">{{ categoria.nombre }}</option>
+        {% endfor%}
+      </select>
+    </div>
+    <button class="btn btn-primary" type="submit" data-loading-text="Un momento...">Listo</button>
+    {% csrf_token %}
+  </form>
+</div>
+<button class="btn btn-block btn-success print" type="button" style="display: none;">Imprimir reporte</button>
+{% endblock %}
+
+{% block js %}
+<script>
+  var theURL = '{% url 'reporte_categoria' %}';
+</script>
+<script src="/media/js/vendor/mustache.js"></script>
+<script src="/media/js/vendor/moment.js"></script>
+<script src="/media/js/actions/reporte-categoria.js"></script>
+{% endblock %}
+
+{% block templates %}
+<script type="text/x-mustache-template" id="tpl-tabla">
+  <div class="report">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Alumno</th>
+          <th>Ingreso</th>
+          <th>Salida</th>
+          <th>Asistido</th>
+          <th>%</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% templatetag openvariable %} #alumnos {% templatetag closevariable %}
+        <tr>
+          <td>
+          {% templatetag openvariable %} alumno {% templatetag closevariable %}
+          </td>
+          <td>
+          {% templatetag openvariable %} ingreso {% templatetag closevariable %}
+          </td>
+          <td>
+          {% templatetag openvariable %} salida {% templatetag closevariable %}
+          </td>
+          <td>
+          {% templatetag openvariable %} asistido {% templatetag closevariable %}
+          </td>
+          <td>
+          {% templatetag openvariable %} porcentaje {% templatetag closevariable %}
+          </td>
+        </tr>
+        {% templatetag openvariable %} /alumnos {% templatetag closevariable %}
+        {% templatetag openvariable %} ^alumnos {% templatetag closevariable %}
+        <tr>
+          <td colspan="5" class="warning">
+          No hay datos :(
+          </td>
+        </tr>
+        {% templatetag openvariable %} /alumnos {% templatetag closevariable %}
+      </tbody>
+      <caption>
+      {% templatetag openvariable %} #curso {% templatetag closevariable %}
+      {% templatetag openvariable %} nombre {% templatetag closevariable %}<br><small>{% templatetag openvariable %} fecha_inicio {% templatetag closevariable %} - {% templatetag openvariable %} fecha_fin {% templatetag closevariable %} &mdash; {% templatetag openvariable %} hora_inicio {% templatetag closevariable %} - {% templatetag openvariable %} hora_fin {% templatetag closevariable %}</small>
+      {% templatetag openvariable %} /curso {% templatetag closevariable %}
+    </caption>
+    </table>
+  </div>
+</script>
+<script type="text/x-mustache-template" id="tpl-caption">
+  <caption>
+    {% templatetag openvariable %} nombre {% templatetag closevariable %}<br><small>{% templatetag openvariable %} fecha_inicio {% templatetag closevariable %} - {% templatetag openvariable %} fecha_fin {% templatetag closevariable %} &mdash; {% templatetag openvariable %} hora_inicio {% templatetag closevariable %} - {% templatetag openvariable %} hora_fin {% templatetag closevariable %}</small>
+  </caption>
+</script>
+{% endblock %}
+
+{% block modals %}
+<div class="modal fade" id="printModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Impresión</h4>
+      </div>
+      <div class="modal-body">
+        <iframe src="" style="zoom:0.60" width="99.6%" height="600" frameborder="0"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

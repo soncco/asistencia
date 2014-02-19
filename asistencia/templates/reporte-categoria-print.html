@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <style>
+      @page {
+        size: A4 landscape;
+        margin: 20pt 25pt;
+      }
+
+      @frame header_frame {
+        -pdf-frame-content: header_content;
+        left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+      }
+
+      body {
+        font-size: 9pt;
+      }
+
+      p {
+        line-height: 5pt;
+        padding-bottom: 0;
+        margin-bottom: 0;
+      }
+
+      table {
+      }
+
+      .small {
+        width: 60pt;
+      }
+
+      .last {
+        margin-bottom: 10pt;
+      }
+
+      .nombregrande {
+        font-size: 22pt;
+        font-weight: bold;
+      }
+
+      .nombre {
+        font-size: 20pt;
+      }
+
+      .shadow {
+        background: #EEEEEE;
+      }
+
+      .hsmall {
+        width: 50pt;
+      }
+
+      .big {
+        font-size: 20pt;
+        font-family: Times;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header_content">
+      <table id="#header">
+        <tr>
+          <td class="hsmall">
+            <img src="/media/ciuf.jpg">
+          </td>
+          <td class="big">
+            Sistema de Asistencia - CIUF
+          </td>
+        </tr>
+      </table>
+      <hr>
+    </div>
+    <div align="center">
+      <p class="nombregrande">Categoría: {{ categoria }}</p>
+    </div>
+    {% for curso in cursos %}
+    <div align="center">
+      <p class="nombre">{{ curso.curso.nombre }}</p> 
+      <p>{{ curso.curso.fecha_inicio }} - {{ curso.curso.fecha_fin }}</p>
+      <p>{{ curso.curso.hora_inicio }} - {{ curso.curso.hora_fin }}</p>
+    </div>
+    <table cellpadding="5" border="1">
+      <thead>
+        <tr class="shadow">
+          <th>Alumno</th>
+          <th>Ingreso</th>
+          <th>Salida</th>
+          <th>Asistido</th>
+          <th>%</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for alumno in curso.alumnos %}
+        <tr>
+          <td>{{ alumno.alumno }}</td>
+          <td>{{ alumno.ingreso }}</td>
+          <td>{{ alumno.salida }}</td>
+          <td>{{ alumno.asistido }}</td>
+          <td align="right">{{ alumno.porcentaje }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" align="center">No hay datos</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endfor %}
+  </body>
+</html>

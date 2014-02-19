@@ -9,6 +9,7 @@
 
   $form.submit(function(e) {
     e.preventDefault();
+    $('.btn-primary').button('loading');
     $.post(theURL, $form.serialize())
       .done(function(data) {
         $wrapper.find('.report').remove();
@@ -36,7 +37,7 @@
 
         $table.append(caption);
       })
-
+    $('.btn-primary').button('reset');
   });
   
 })(jQuery)

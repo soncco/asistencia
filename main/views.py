@@ -15,7 +15,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django_xhtml2pdf.utils import generate_pdf
 
-from models import Alumno, Personal, Horario, Curso, RegistroPersonal, RegistroAlumno
+from models import Alumno, Personal, Horario, Categoria, Curso, RegistroPersonal, RegistroAlumno
 import json, datetime
 from utils import *
 
@@ -240,6 +240,15 @@ def reporte_curso_total(request):
   return render_to_response('reporte-curso-total.html', context, context_instance = RequestContext(request))
 
 @login_required
+def reporte_categoria(request):
+  if request.method == 'POST':
+    categoria = request.POST.get('categoria')
+
+  categorias = Categoria.objects.all()
+  context = {'categorias': categorias}
+  return render_to_response('reporte-categoria.html', context, context_instance = RequestContext(request))
+
+@login_required
 def reporte_curso_print(request):
   
   curso = request.GET.get('curso')
@@ -332,3 +341,119 @@ def reporte_curso_total_print(request):
   resp = HttpResponse(content_type = 'application/pdf')
   context = {'results': results, 'curso': curso, 'fechas': fechas}
   return generate_pdf('reporte-curso-total-print.html', file_object = resp, context = context)
+
+@login_required
+def reporte_categoria_print(request):
+  categoria = request.GET.get('categoria')
+
+  the_categoria = Categoria.objects.get(pk = categoria)
+  cursos = Curso.objects.filter(categoria = categoria, activo = True)
+
+  data = []
+
+  for curso in cursos:
+    alumnos = get_alumnos_curso(curso.pk)
+    results = []
+
+    for alumno in alumnos:
+      completo = "%s, %s" % (alumno.apellidos, alumno.nombres)
+      registros = get_registros_alumno_object(alumno, curso.pk, curso.fecha_inicio)
+      
+      try:
+        entrada = registros[0].marca
+      except:
+        entrada = None
+
+      try:
+        salida = registros[1].marca
+      except:
+        salida = None
+
+      if entrada == None or salida == None:
+        asistido = 0
+      else:
+        asistido = difft(entrada, salida)
+
+      if asistido == 0:
+        porcentaje = 0
+      else:
+        total = difft(curso.hora_inicio, curso.hora_fin)
+        porcentaje = (asistido / total) * 100
+
+      results.append({
+        'alumno': completo,
+        'ingreso': str(entrada.strftime('%H:%M:%S')) if entrada is not None else 'No se registró',
+        'salida': str(salida.strftime('%H:%M:%S')) if salida is not None else 'No se registró',
+        'asistido': str(datetime.timedelta(minutes = asistido)),
+        'porcentaje': '%.2f' % porcentaje
+      })
+
+    data.append({
+      'curso': curso,
+      'alumnos': results
+    })
+
+
+  resp = HttpResponse(content_type = 'application/pdf')
+  context = {'categoria': the_categoria, 'cursos': data}
+  return generate_pdf('reporte-categoria-print.html', file_object = resp, context = context)
+
+@login_required
+def categoria_cursos(request, categoria):
+  cursos = Curso.objects.filter(categoria = categoria)
+  results = []
+
+  for curso in cursos:
+    results.append({
+      'id': curso.pk,
+      'fecha_inicio': curso.fecha_inicio.strftime('%d, %b %Y'),
+      'fecha_fin': curso.fecha_fin.strftime('%d, %b %Y'),
+      'hora_inicio': str(curso.hora_inicio),
+      'hora_fin': str(curso.hora_fin),
+      'nombre': curso.nombre
+    })
+
+  return HttpResponse(json.dumps(results), mimetype = "application/json")
+
+@login_required
+def alumnos_curso_categoria(request, curso):
+  alumnos = get_alumnos_curso(curso)
+  the_curso = Curso.objects.get(pk = curso)
+
+  results = []
+
+  for alumno in alumnos:
+    completo = "%s, %s" % (alumno.apellidos, alumno.nombres)
+    registros = get_registros_alumno_object(alumno, curso, the_curso.fecha_inicio)
+    
+    try:
+      entrada = registros[0].marca
+    except:
+      entrada = None
+
+    try:
+      salida = registros[1].marca
+    except:
+      salida = None
+
+    if entrada == None or salida == None:
+      asistido = 0
+    else:
+      asistido = difft(entrada, salida)
+
+    if asistido == 0:
+      porcentaje = 0
+    else:
+      total = difft(the_curso.hora_inicio, the_curso.hora_fin)
+      porcentaje = (asistido / total) * 100
+
+    results.append({
+      'alumno': completo,
+      'ingreso': str(entrada.strftime('%H:%M:%S')) if entrada is not None else 'No se registró',
+      'salida': str(salida.strftime('%H:%M:%S')) if salida is not None else 'No se registró',
+      'asistido': str(datetime.timedelta(minutes = asistido)),
+      'porcentaje': '%.2f' % porcentaje
+    })
+
+  return HttpResponse('{"alumnos": ' + json.dumps(results) + "}", mimetype = "application/json")
+

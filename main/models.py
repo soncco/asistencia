@@ -7,6 +7,13 @@ TIPOS = (
   ('S', 'Salida'),
 )
 
+class Categoria(models.Model):
+  nombre = models.CharField(max_length = 255)
+  descripcion = models.TextField(blank = True)
+
+  def __unicode__(self):
+    return self.nombre
+
 class Curso(models.Model):
   nombre = models.CharField(max_length = 255)
   hora_inicio = models.TimeField()
@@ -14,6 +21,7 @@ class Curso(models.Model):
   fecha_inicio = models.DateField()
   fecha_fin = models.DateField()
   activo = models.BooleanField(default = True)
+  categoria = models.ForeignKey(Categoria, blank = True, null = True)
 
   def __unicode__(self):
     return self.nombre
