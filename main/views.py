@@ -357,28 +357,10 @@ def reporte_categoria_print(request):
 
     for alumno in alumnos:
       completo = "%s, %s" % (alumno.apellidos, alumno.nombres)
-      registros = get_registros_alumno_object(alumno, curso.pk, curso.fecha_inicio)
-      
-      try:
-        entrada = registros[0].marca
-      except:
-        entrada = None
-
-      try:
-        salida = registros[1].marca
-      except:
-        salida = None
-
-      if entrada == None or salida == None:
-        asistido = 0
-      else:
-        asistido = difft(entrada, salida)
-
-      if asistido == 0:
-        porcentaje = 0
-      else:
-        total = difft(curso.hora_inicio, curso.hora_fin)
-        porcentaje = (asistido / total) * 100
+      entrada = get_entrada_dia(alumno, curso, curso.fecha_inicio)
+      salida = get_salida_dia(alumno, curso, curso.fecha_inicio)
+      asistido = get_asistido_dia(alumno, curso, curso.fecha_inicio)
+      porcentaje = get_porcentaje_dia(alumno, curso.pk, curso.fecha_inicio)
 
       results.append({
         'alumno': completo,
@@ -424,28 +406,10 @@ def alumnos_curso_categoria(request, curso):
 
   for alumno in alumnos:
     completo = "%s, %s" % (alumno.apellidos, alumno.nombres)
-    registros = get_registros_alumno_object(alumno, curso, the_curso.fecha_inicio)
-    
-    try:
-      entrada = registros[0].marca
-    except:
-      entrada = None
-
-    try:
-      salida = registros[1].marca
-    except:
-      salida = None
-
-    if entrada == None or salida == None:
-      asistido = 0
-    else:
-      asistido = difft(entrada, salida)
-
-    if asistido == 0:
-      porcentaje = 0
-    else:
-      total = difft(the_curso.hora_inicio, the_curso.hora_fin)
-      porcentaje = (asistido / total) * 100
+    entrada = get_entrada_dia(alumno, curso, the_curso.fecha_inicio)
+    salida = get_salida_dia(alumno, curso, the_curso.fecha_inicio)
+    asistido = get_asistido_dia(alumno, curso, the_curso.fecha_inicio)
+    porcentaje = get_porcentaje_dia(alumno, curso, the_curso.fecha_inicio)
 
     results.append({
       'alumno': completo,

@@ -16,7 +16,12 @@
         $wrapper.append(tabla);
         $wrapper.find('.report').addClass('animated flipInY');
         $table = $wrapper.find('.table')
-        $table.find('td:contains("Falta")').addClass('danger')
+        $('.percent').each(function(i) {
+          text = $(this).text().trim();
+          console.log(text);
+          if(text <= 50 && text > 21) $(this).addClass('warning');
+          if(text <= 20) $(this).addClass('danger');
+        });
 
         $option = $curso.find(':selected');
         caption = Mustache.render($tplCaption.html(), {

@@ -13,7 +13,7 @@
         {% endfor%}
       </select>
     </div>
-    <button class="btn btn-primary" type="submit">Listo</button>
+    <button class="btn btn-primary get-report" type="submit" data-loading-text="Un momento...">Listo</button>
     {% csrf_token %}
   </form>
 </div>
@@ -49,8 +49,8 @@
             {% templatetag openvariable %} apellidos {% templatetag closevariable %},
             {% templatetag openvariable %} nombres {% templatetag closevariable %}
           </td>
-          <td class="success text-right">
-            {% templatetag openvariable %} porcentaje {% templatetag closevariable %} %
+          <td class="text-right percent">
+            {% templatetag openvariable %} porcentaje {% templatetag closevariable %}
           </td>
         </tr>
         {% templatetag openvariable %}/alumnos{% templatetag closevariable %}
