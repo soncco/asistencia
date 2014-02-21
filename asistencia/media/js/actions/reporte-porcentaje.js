@@ -19,6 +19,7 @@
         $('.percent').each(function(i) {
           text = $(this).text().trim();
           console.log(text);
+          if(text > 51) $(this).addClass('success');
           if(text <= 50 && text > 21) $(this).addClass('warning');
           if(text <= 20) $(this).addClass('danger');
         });
